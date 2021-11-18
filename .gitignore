@@ -102,3 +102,16 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Transpiled files
+build/
+
+# VS Code
+.vscode
+!.vscode/tasks.js
+
+# JetBrains IDEs
+.idea/
+
+# Misc
+.DS_Store
