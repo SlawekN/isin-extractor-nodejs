@@ -1,19 +1,15 @@
-import { SearchIndexer } from './SearchIndexer';
-import {vol} from 'memfs';
+import { SearchIndexer, ErrorCallback } from './SearchIndexer';
+import * as fs from 'fs';
 
-jest.mock("fs");
+jest.mock('fs');
 
 describe('SearchIndexer', () => {
-  beforeEach(() => {
-    vol.reset();
-  });
-
-  it('should add line to empty output.csv file', () => {
+  it('should call appendFile once with: output.csv, test1,test2,test3, ErrorCallback', () => {
     const input = `{"figi": "test1", "isin": "test2", "companyname": "test3"}`;
     const indexer = new SearchIndexer();
-    indexer.IndexDocument(input);
 
-
-
-  });
+    expect(indexer.IndexDocument(input)).toBe('OK');
+    expect(fs.appendFile).toHaveBeenCalledTimes(1);
+    expect(fs.appendFile).toHaveBeenCalledWith('output.csv', 'test1,test2,test3\n', ErrorCallback);
+  })
 });
