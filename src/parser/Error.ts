@@ -9,7 +9,7 @@ class ParserError extends Error{
   }
 }
 
-const ParserErrorEmptyJSONString = new ParserError("provided empty in JSON string");
+const ParserErrorEmptyJSONString = new ParserError("provided empty JSON string");
 const ParserErrorMissingProperties = new ParserError("missing properties in JSON String");
 
 export  {
