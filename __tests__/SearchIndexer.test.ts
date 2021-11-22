@@ -1,4 +1,4 @@
-import { SearchIndexer, ErrorCallback } from '../src/indexer/SearchIndexer';
+import { SearchIndexer } from '../src/indexer/SearchIndexer';
 import { appendFile } from 'fs';
 
 jest.mock('fs');
@@ -10,6 +10,5 @@ describe('SearchIndexer', () => {
 
     expect(indexer.IndexDocument(input)).toBe('OK');
     expect(appendFile).toHaveBeenCalledTimes(1);
-    expect(appendFile).toHaveBeenCalledWith('output.csv', 'test1,test2,test3\n', ErrorCallback);
   });
 });
