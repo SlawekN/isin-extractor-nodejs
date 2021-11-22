@@ -1,4 +1,4 @@
-import { Converter, ConverterError } from './Converter';
+import { Converter, ConverterError } from '../src/indexer/Converter';
 
 describe('Converter', () => {
   it('should convert valid JSON string describing single element to IsInIndexItem class Object', () => {
