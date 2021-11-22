@@ -1,4 +1,4 @@
-class ParserError extends Error{
+class ConverterError extends Error{
   constructor(message: string) {
     super(message);
     this.name = "ParserError";
@@ -9,10 +9,12 @@ class ParserError extends Error{
   }
 }
 
-const ParserErrorEmptyJSONString = new ParserError("provided empty JSON string");
-const ParserErrorMissingProperties = new ParserError("missing properties in JSON String");
+const ConverterErrorEmptyJSONString = new ConverterError("provided empty JSON string");
+const ConverterErrorMissingProperties = new ConverterError("missing properties in JSON String");
+const ConverterErrorEmptyPropertyValue = new ConverterError("property has empty value");
 
 export  {
-  ParserErrorEmptyJSONString,
-  ParserErrorMissingProperties
+  ConverterErrorEmptyJSONString,
+  ConverterErrorMissingProperties,
+  ConverterErrorEmptyPropertyValue
 }
