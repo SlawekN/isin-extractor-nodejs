@@ -9,12 +9,6 @@ class ConverterError extends Error{
   }
 }
 
-const ConverterErrorEmptyJSONString = new ConverterError("provided empty JSON string");
-const ConverterErrorMissingProperties = new ConverterError("missing properties in JSON String");
-const ConverterErrorEmptyPropertyValue = new ConverterError("property has empty value");
-
 export  {
-  ConverterErrorEmptyJSONString,
-  ConverterErrorMissingProperties,
-  ConverterErrorEmptyPropertyValue
+  ConverterError,
 }

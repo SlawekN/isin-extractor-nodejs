@@ -1,8 +1,4 @@
-import {
-  ConverterErrorEmptyJSONString,
-  ConverterErrorMissingProperties,
-  ConverterErrorEmptyPropertyValue,
-} from './Error';
+import { ConverterError } from './Error';
 import { IsInIndexItem } from './IsInIndexItem';
 
 interface JSONBody {
@@ -12,36 +8,35 @@ interface JSONBody {
 }
 
 class Converter {
-  private static validateProperties(obj: JSONBody) {
-    if (Converter.JSONUndefinedProperties(obj)) {
-      throw ConverterErrorMissingProperties;
-    }
-    if (Converter.JSONEmptyPropertiesValue(obj)) {
-      throw ConverterErrorEmptyPropertyValue;
-    }
-  }
+  private readonly _propsLimit: number = 3;
 
-  private static JSONEmptyPropertiesValue(obj: JSONBody): boolean {
-    return (!obj.figi) || (!obj.isin) || (!obj.companyname)
-  }
+  private validateProperties(obj: JSONBody) {
+    const propsNumber: number = Object.keys(obj).length;
+    if (this._propsLimit != propsNumber) {
+      throw new ConverterError(`there is ${propsNumber} properties in JSON string, there should be maximum ${this._propsLimit}`);
+    }
 
-  private static JSONUndefinedProperties(obj: JSONBody) {
-    const missingISIN = obj.isin === undefined;
-    const missingFigi = obj.figi === undefined;
-    const missingCompanyName = obj.companyname === undefined;
-    return missingISIN || missingFigi || missingCompanyName;
+    Object.keys(obj).forEach((key: string) => {
+      const val = obj[key];
+      if (key != 'figi' && key != 'isin' && key != 'companyname')
+        throw new ConverterError(`invalid ${key} property key in JSON string`);
+      if (val === undefined)
+        throw new ConverterError(`value of ${key} is undefined`);
+      if (!val)
+        throw new ConverterError(`value of ${key} is empty`);
+    });
   }
 
   public ToIsInIndexItem(jsonText: string): IsInIndexItem {
     if (!jsonText.length)
-      throw ConverterErrorEmptyJSONString;
+      throw new ConverterError(`provided json string is empty`);
 
     const obj: JSONBody = JSON.parse(jsonText);
-    Converter.validateProperties(obj);
+    this.validateProperties(obj);
     return new IsInIndexItem(obj.figi, obj.isin, obj.companyname);
   }
 }
 
 export {
   Converter,
-}
+};
