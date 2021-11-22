@@ -1,16 +1,9 @@
-import { ConverterError } from './Error';
-import { IsInIndexItem } from './IsInIndexItem';
-
-interface JSONBody {
-  figi: string;
-  isin: string;
-  companyname: string;
-}
+import { ISINIndexItem } from './ISINIndexItem';
 
 class Converter {
-  private readonly _propsLimit: number = 3;
+ private readonly _propsLimit: number = 3;
 
-  private validateProperties(obj: JSONBody) {
+  private validateObjectProperties(obj) {
     const propsNumber: number = Object.keys(obj).length;
     if (this._propsLimit != propsNumber) {
       throw new ConverterError(`there is ${propsNumber} properties in JSON string, there should be maximum ${this._propsLimit}`);
@@ -27,16 +20,25 @@ class Converter {
     });
   }
 
-  public ToIsInIndexItem(jsonText: string): IsInIndexItem {
+  public ToISINIndexItem(jsonText: string): ISINIndexItem {
     if (!jsonText.length)
       throw new ConverterError(`provided json string is empty`);
 
-    const obj: JSONBody = JSON.parse(jsonText);
-    this.validateProperties(obj);
-    return new IsInIndexItem(obj.figi, obj.isin, obj.companyname);
+    const object = JSON.parse(jsonText);
+    this.validateObjectProperties(object);
+    return new ISINIndexItem(object.figi, object.isin, object.companyname);
   }
 }
 
-export {
+class ConverterError extends Error{
+  constructor(message: string) {
+    super(message);
+    this.name = "ConverterError";
+  }
+}
+
+export  {
   Converter,
-};
+  ConverterError,
+}
+
