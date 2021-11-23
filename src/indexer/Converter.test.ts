@@ -20,7 +20,7 @@ describe('Converter', () => {
     expect(() => converter.ToISINIndexItem(input)).toThrowError(AppError);
   });
 
-  xit('should throw ConverterError error for missing figiId property in JSON string', () => {
+  it.skip('should throw ConverterError error for missing figiId property in JSON string', () => {
     const input = `{"isin": "test2", "companyName": "test3"}`;
     const converter = new Converter();
 
