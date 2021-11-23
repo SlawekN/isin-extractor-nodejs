@@ -1,4 +1,4 @@
-import { greeter } from './main';
+import { greeter } from '../src/main';
 
 describe('main function', () => {
 
