@@ -33,7 +33,7 @@ class SearchIndexer implements ISearchIndexer {
       const row: string = item.FIGI + ',' + item.ISIN + ',' + item.companyName + '\n';
       appendFile(this._path, row, AppendFileErrorCallback);
     } catch (err) {
-      console.error(err)
+      console.error(err);
       return 'NOT OK';
     }
     return 'OK';
