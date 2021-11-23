@@ -19,17 +19,12 @@ const AppendFileErrorCallback = (err) => {
 };
 
 export class SearchIndexer implements ISearchIndexer {
-  private _converter: Converter;
-  private readonly _path: string;
+  private _converter: Converter = new Converter();
+  private readonly _path: string = 'output.csv';
 
-  constructor() {
-    this._path = 'output.csv';
-    this._converter = new Converter();
-  }
-
-  public IndexDocument(_jsonText: string): string {
+  public IndexDocument(jsonText: string): string {
     try {
-      const item: ISINIndexItem = this._converter.ToISINIndexItem(_jsonText);
+      const item: ISINIndexItem = this._converter.ToISINIndexItem(jsonText);
       const row: string = item.FIGI + ',' + item.ISIN + ',' + item.companyName + '\n';
       appendFile(this._path, row, AppendFileErrorCallback);
     } catch (err) {

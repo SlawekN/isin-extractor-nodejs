@@ -4,7 +4,7 @@ import { ISINIndexItem } from '../src/indexer/ISINIndexItem';
 
 describe('Converter', () => {
   it('should convert valid JSON string describing single element to IsInIndexItem class Object', () => {
-    const input = `{"figi": "test1", "isin": "test2", "companyname": "test3"}`;
+    const input = `{"FIGI": "test1", "ISIN": "test2", "companyName": "test3"}`;
     const converter = new Converter();
     const item: ISINIndexItem = converter.ToISINIndexItem(input);
 
