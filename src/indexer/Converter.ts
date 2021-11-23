@@ -11,16 +11,17 @@ enum ErrorCodes {
 const CONVERTER_ERROR = 'CONVERTER_ERROR';
 
 export class Converter {
-  private readonly _propsLimit: number = 3;
+  private readonly propsLimit: number = 6;
+  private readonly validJsonProps = ["documentId", "isin", "companyName", "figiId", "ticker", "foundText"];
 
   public ToISINIndexItem(jsonText: string): ISINIndexItem {
     const object = this.toJSON(jsonText);
     const item: ISINIndexItem = Object.assign(ISINIndexItem, object);
 
     const lookup = new Map();
-    lookup.set('ISIN', item.ISIN.length);
-    lookup.set('FIGI', item.ISIN.length);
-    lookup.set('companyName', item.companyName.length);
+    lookup.set('isin', item.isin?.length || 0);
+    lookup.set('figiId', item.figiId?.length || 0);
+    lookup.set('companyName', item.companyName?.length || 0);
 
     for (const [key, value] of lookup) {
       if (value.length == 0) {
@@ -39,18 +40,19 @@ export class Converter {
 
     const object = JSON.parse(jsonText);
     const propsNumber: number = Object.keys(object).length;
-    if (this._propsLimit != propsNumber) {
-      const desc = `there is ${propsNumber} properties in JSON string, there should be maximum ${this._propsLimit}`;
+    if (propsNumber > this.propsLimit) {
+      const desc = `there is ${propsNumber} properties in JSON string, there should be maximum ${this.propsLimit}`;
       throw new AppError(CONVERTER_ERROR, ErrorCodes.PROPERTIES_NUMBER_EXCEEDED, desc);
     }
 
     const keys = Object.keys(object);
     for (const key of keys) {
-      if (key != 'FIGI' && key != 'ISIN' && key != 'companyName') {
-        const desc = `unknown ${key} property key in JSON string. Only allowed figi, companyname, isin`;
+      if (this.validJsonProps.indexOf(key) < 0) {
+        const desc = `unknown ${key} property key in JSON string. Only allowed figi, companyName, isin`;
         throw new AppError(CONVERTER_ERROR, ErrorCodes.UNKNOWN_PROPERTY, desc);
       }
     }
+
     return object;
   }
 }

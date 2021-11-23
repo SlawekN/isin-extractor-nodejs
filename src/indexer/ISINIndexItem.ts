@@ -1,11 +1,11 @@
 export class ISINIndexItem {
-  public readonly FIGI: string;
-  public readonly ISIN: string;
+  public readonly figiId: string;
+  public readonly isin: string;
   public readonly companyName: string;
 
-  constructor(FIGI: string, ISIN: string, companyName: string) {
-    this.ISIN = ISIN;
-    this.FIGI = FIGI;
+  constructor(figiId: string, isin: string, companyName: string) {
+    this.isin = isin;
+    this.figiId = figiId;
     this.companyName = companyName;
   }
 }
