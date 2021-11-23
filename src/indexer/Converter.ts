@@ -19,12 +19,12 @@ export class Converter {
     const item: ISINIndexItem = Object.assign(ISINIndexItem, object);
 
     const lookup = new Map();
-    lookup.set('isin', item.isin?.length || 0);
-    lookup.set('figiId', item.figiId?.length || 0);
-    lookup.set('companyName', item.companyName?.length || 0);
+    lookup.set('isin', item.isin);
+    lookup.set('figiId', item.figiId);
+    lookup.set('companyName', item.companyName);
 
     for (const [key, value] of lookup) {
-      if (value.length == 0) {
+      if (!value || value?.length === 0) {
         const desc = `value of ${key} property is empty`;
         throw new AppError(CONVERTER_ERROR, ErrorCodes.EMPTY_PROPERTY_VALUE, desc);
       }
@@ -48,7 +48,7 @@ export class Converter {
     const keys = Object.keys(object);
     for (const key of keys) {
       if (this.validJsonProps.indexOf(key) < 0) {
-        const desc = `unknown ${key} property key in JSON string. Only allowed figi, companyName, isin`;
+        const desc = `unknown ${key} property key in JSON string. Only allowed figiId, companyName, isin`;
         throw new AppError(CONVERTER_ERROR, ErrorCodes.UNKNOWN_PROPERTY, desc);
       }
     }
