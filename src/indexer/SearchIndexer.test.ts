@@ -8,7 +8,7 @@ describe('SearchIndexer', () => {
   afterAll(() => jest.spyOn(console, 'error').mockRestore());
 
   it('should call appendFile once with: output.csv, test1,test2,test3, ErrorCallback', () => {
-    const input = `{"figiId": "test1", "ISIN": "test2", "companyName": "test3"}`;
+    const input = `{"figiId": "test1", "isin": "test2", "companyName": "test3"}`;
     const indexer = new SearchIndexer();
 
     expect(indexer.IndexDocument(input)).toBe('OK');
