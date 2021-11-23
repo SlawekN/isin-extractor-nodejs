@@ -9,8 +9,4 @@ export class AppError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
     Error.captureStackTrace(this);
   }
-
-  public get Code(): number {
-    return this.code;
-  }
 }

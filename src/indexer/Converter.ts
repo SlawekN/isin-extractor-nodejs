@@ -14,10 +14,6 @@ const CONVERTER_ERROR = 'CONVERTER_ERROR';
 export class Converter {
   private readonly _propsLimit: number = 3;
 
-  constructor(propsLimit = 3) {
-    this._propsLimit = propsLimit;
-  }
-
   private validateObjectProperties(obj) {
     const propsNumber: number = Object.keys(obj).length;
     if (this._propsLimit != propsNumber) {

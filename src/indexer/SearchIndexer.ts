@@ -18,7 +18,7 @@ const AppendFileErrorCallback = (err) => {
     throw new AppError(INDEXER_ERROR, ErrorCodes.APPEND_FILE_FAILED, err.message);
 };
 
-class SearchIndexer implements ISearchIndexer {
+export class SearchIndexer implements ISearchIndexer {
   private _converter: Converter;
   private readonly _path: string;
 
@@ -39,7 +39,3 @@ class SearchIndexer implements ISearchIndexer {
     return 'OK';
   }
 }
-
-export {
-  SearchIndexer,
-};
