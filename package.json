@@ -30,7 +30,6 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.13",
     "tslib": "~2.3.1"
   }
 }
