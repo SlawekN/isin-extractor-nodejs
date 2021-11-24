@@ -25,7 +25,7 @@ export class SearchIndexer implements ISearchIndexer {
   public IndexDocument(jsonText: string): string {
     try {
       const item: ISINIndexItem = this.converter.ToISINIndexItem(jsonText);
-      const row: string = item.figiId + ',' + item.isin + ',' + item.companyName + '\n';
+      const row: string = item.figiId + ',' + item.documentId + ',' + item.isin + ',' + item.companyName + '\n';
       appendFile(this.path, row, AppendFileErrorCallback);
     } catch (err) {
       console.error(err);
