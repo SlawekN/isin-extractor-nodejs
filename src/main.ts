@@ -1,5 +1,16 @@
-export function greeter(name: string) {
-  return `Hello, ${name}`;
+import { greeter } from './greeter';
+
+async function main() {
+  const message = await greeter();
+  console.log(message);
 }
 
-console.log(greeter("John Smith"));
+main()
+  .then(() => {
+    console.log('Application successfully terminated with exit code: 0');
+    process.exit(0);
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
