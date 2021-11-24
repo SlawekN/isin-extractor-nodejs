@@ -1,17 +1,8 @@
-export function greeter(name: string) {
-  return `Hello, ${name}`;
-}
-
-console.log(greeter('John Smith'));
-
-
-async function AsyncHello() {
-  return 'Hello';
-}
+import { greeter } from './greeter';
 
 async function main() {
-  const temp = await AsyncHello();
-  console.log(temp);
+  const message = await greeter();
+  console.log(message);
 }
 
 main()
@@ -23,6 +14,3 @@ main()
     console.error(err);
     process.exit(1);
   });
-
-
-
