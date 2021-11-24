@@ -1,36 +1,29 @@
 import { Converter } from './Converter';
-import { ISINIndexItem } from './ISINIndexItem';
-import { appendFile } from 'fs';
-import { AppError } from '../error/AppError';
+import { RowAppender } from './RowAppender';
 
 interface ISearchIndexer {
   IndexDocument(jsonText: string): string;
 }
 
-enum ErrorCodes {
-  APPEND_FILE_FAILED,
-}
-
-const INDEXER_ERROR = 'INDEXER_ERROR';
-
-const AppendFileErrorCallback = (err) => {
-  if (err)
-    throw new AppError(INDEXER_ERROR, ErrorCodes.APPEND_FILE_FAILED, err.message);
-};
+const OK = 'OK';
+const NOT_OK = 'NOT OK';
 
 export class SearchIndexer implements ISearchIndexer {
   private converter: Converter = new Converter();
   private readonly path: string = 'output.csv';
 
   public IndexDocument(jsonText: string): string {
-    try {
-      const item: ISINIndexItem = this.converter.ToISINIndexItem(jsonText);
-      const row: string = item.figiId + ',' + item.documentId + ',' + item.isin + ',' + item.companyName + '\n';
-      appendFile(this.path, row, AppendFileErrorCallback);
-    } catch (err) {
-      console.error(err);
-      return 'NOT OK';
-    }
-    return 'OK';
+    const conversionResult = this.converter.ToISINIndexItem(jsonText);
+    if (conversionResult.error)
+      return NOT_OK;
+
+    const item = conversionResult.item;
+    const row: string = item.figiId + ',' + item.documentId + ',' + item.isin + ',' + item.companyName + '\n';
+
+    const appenderResultError = RowAppender(this.path, row);
+    if (appenderResultError)
+      return NOT_OK;
+
+    return OK;
   }
 }
