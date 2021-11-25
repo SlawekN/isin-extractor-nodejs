@@ -44,7 +44,6 @@ describe('JSONValidator', () => {
       expect(validationError.code).toBe(ErrorCodes.INSUFFICIENT_PROPERTIES_NUMBER);
     });
 
-
     it('when empty figiId property value in JSON string, then return error with EMPTY_PROPERTY_VALUE code', () => {
       // Arrange
       const jsonText = `{"documentId": "12321321", "isin": "test2", "companyName": "test3", "figiId": "" }`;
