@@ -14,7 +14,7 @@ export class SearchIndexer implements ISearchIndexer {
 
   public IndexDocument(jsonText: string): string {
     const conversionResult = this.converter.ToISINIndexItem(jsonText);
-    if (conversionResult.error.isNull())
+    if (!conversionResult.error.isNull())
       return NOT_OK;
 
     const item = conversionResult.item;
