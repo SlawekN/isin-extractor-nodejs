@@ -1,6 +1,6 @@
 import { ISINIndexItem, NullISINIndexItem } from './ISINIndexItem';
 import { AppError, NullError } from '../error/AppError';
-import { JSONValidator } from './JSONValidator';
+import { JSONVerifier } from './JSONVerifier';
 
 enum ErrorCodes {
   EMPTY_STRING = 1,
@@ -10,7 +10,7 @@ enum ErrorCodes {
 const CONVERTER_ERROR = 'CONVERTER_ERROR';
 
 class Converter {
-  private validator: JSONValidator = new JSONValidator();
+  private verifier: JSONVerifier = new JSONVerifier();
 
   public ToISINIndexItem(jsonText: string) {
     const result = this.toJSON(jsonText);
@@ -38,9 +38,9 @@ class Converter {
     if (!parseResult.error.isNull())
       return { jsonObject: null, error: parseResult.error };
 
-    const validationJSONError = this.validator.validate(parseResult.jsonObject);
-    if (!validationJSONError.isNull())
-      return { jsonObject: null, error: validationJSONError };
+    const verifierError = this.verifier.checkJSONObject(parseResult.jsonObject);
+    if (!verifierError.isNull())
+      return { jsonObject: null, error: verifierError };
 
     return { jsonObject: parseResult.jsonObject, error: new NullError() };
   }
