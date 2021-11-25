@@ -1,4 +1,4 @@
-export class AppError extends Error {
+class AppError extends Error {
   public readonly name: string;
   public readonly code: number;
 
@@ -9,4 +9,23 @@ export class AppError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
     Error.captureStackTrace(this);
   }
+
+  isNull(): boolean {
+    return this.code == 0;
+  }
 }
+
+class NullError extends AppError {
+  constructor() {
+    super('', 0, '');
+  }
+
+  isNull(): boolean {
+    return true;
+  }
+}
+
+export {
+  NullError,
+  AppError,
+};
