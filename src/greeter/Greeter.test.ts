@@ -1,4 +1,4 @@
-import { greeter } from './greeter';
+import { greeter } from './Greeter';
 
 describe('greeter function', () => {
   it('when called with argument John, then returns `Hello, John message`', async () => {

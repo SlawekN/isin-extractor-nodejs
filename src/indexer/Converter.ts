@@ -1,59 +1,52 @@
-import { ISINIndexItem } from './ISINIndexItem';
-import { AppError } from '../error/AppError';
+import { ISINIndexItem, NullISINIndexItem } from './ISINIndexItem';
+import { AppError, NullError } from '../error/AppError';
+import { JSONVerifier } from './JSONVerifier';
 
 enum ErrorCodes {
   EMPTY_STRING = 1,
-  UNKNOWN_PROPERTY,
-  PROPERTIES_NUMBER_EXCEEDED,
-  EMPTY_PROPERTY_VALUE,
+  JSON_PARSE_EXCEPTION,
 }
 
 const CONVERTER_ERROR = 'CONVERTER_ERROR';
 
-export class Converter {
-  private readonly propsLimit: number = 6;
-  private readonly validJsonProps = ["documentId", "isin", "companyName", "figiId", "ticker", "foundText"];
+class Converter {
+  private verifier: JSONVerifier = new JSONVerifier();
 
-  public ToISINIndexItem(jsonText: string): ISINIndexItem {
-    const object = this.toJSON(jsonText);
-    const item: ISINIndexItem = Object.assign(ISINIndexItem, object);
+  public ToISINIndexItem(jsonText: string) {
+    const result = this.toJSON(jsonText);
+    if (!result.error.isNull())
+      return { error: result.error, item: new NullISINIndexItem() };
 
-    const lookup = new Map();
-    lookup.set('isin', item.isin);
-    lookup.set('figiId', item.figiId);
-    lookup.set('companyName', item.companyName);
-
-    for (const [key, value] of lookup) {
-      if (!value || value?.length === 0) {
-        const desc = `value of ${key} property is empty`;
-        throw new AppError(CONVERTER_ERROR, ErrorCodes.EMPTY_PROPERTY_VALUE, desc);
-      }
-    }
-    return item;
+    const item: ISINIndexItem = Object.assign(ISINIndexItem, result.jsonObject);
+    return { error: new NullError(), item: item };
   }
 
   private toJSON(jsonText: string) {
     if (!jsonText.length) {
       const desc = 'provided empty JSON string for parsing';
-      throw new AppError(`ConverterError`, ErrorCodes.EMPTY_STRING, desc);
+      return { jsonObject: null, error: new AppError(`ConverterError`, ErrorCodes.EMPTY_STRING, desc) };
     }
 
-    const object = JSON.parse(jsonText);
-    const propsNumber: number = Object.keys(object).length;
-    if (propsNumber > this.propsLimit) {
-      const desc = `there is ${propsNumber} properties in JSON string, there should be maximum ${this.propsLimit}`;
-      throw new AppError(CONVERTER_ERROR, ErrorCodes.PROPERTIES_NUMBER_EXCEEDED, desc);
-    }
-
-    const keys = Object.keys(object);
-    for (const key of keys) {
-      if (this.validJsonProps.indexOf(key) < 0) {
-        const desc = `unknown ${key} property key in JSON string. Only allowed figiId, companyName, isin`;
-        throw new AppError(CONVERTER_ERROR, ErrorCodes.UNKNOWN_PROPERTY, desc);
+    const parseResult = (() => {
+      try {
+        return { jsonObject: JSON.parse(jsonText), error: new NullError() };
+      } catch (err) {
+        return { jsonObject: null, error: new AppError(CONVERTER_ERROR, ErrorCodes.JSON_PARSE_EXCEPTION, err.message) };
       }
-    }
+    })();
 
-    return object;
+    if (!parseResult.error.isNull())
+      return { jsonObject: null, error: parseResult.error };
+
+    const verifierError = this.verifier.checkJSONObject(parseResult.jsonObject);
+    if (!verifierError.isNull())
+      return { jsonObject: null, error: verifierError };
+
+    return { jsonObject: parseResult.jsonObject, error: new NullError() };
   }
 }
 
+export {
+  ErrorCodes,
+  Converter,
+};

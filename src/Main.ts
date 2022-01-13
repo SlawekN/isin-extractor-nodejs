@@ -1,4 +1,4 @@
-import { greeter } from './greeter';
+import { greeter } from './greeter/Greeter';
 
 async function main() {
   const message = await greeter();
